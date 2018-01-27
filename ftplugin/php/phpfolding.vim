@@ -624,7 +624,7 @@ function! PHPFoldText() " {{{
     endif
 
     if !exists("g:PHPFoldingRepeatSymbol")
-        let g:PHPFoldingRepeatSymbol='+'
+        let g:PHPFoldingRepeatSymbol='.'
     endif
 
 	let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
