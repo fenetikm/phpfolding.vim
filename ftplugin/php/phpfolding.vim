@@ -619,6 +619,10 @@ function! PHPFoldText() " {{{
 		let line = substitute(lineString, '\t', repeat(' ', &tabstop), 'g')
 	endif
 
+    if !exists("g:PHPFoldingCollapsedSymbol")
+        let g:PHPFoldingCollapsedSymbol='+'
+    endif
+
 	let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
 	let foldSize = 1 + v:foldend - v:foldstart
 	let foldSizeStr = " " . foldSize . " lines "
@@ -626,7 +630,7 @@ function! PHPFoldText() " {{{
 	let lineCount = line("$")
 	let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
 	let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
-	return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
+	return g:PHPFoldingCollapsedSymbol . ' ' . line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 endfunction
 " }}}
 function! SkipMatch() " {{{
