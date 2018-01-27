@@ -601,27 +601,32 @@ function! PHPFoldText() " {{{
 	endif
 
 	" Some common replaces...
-	" if currentLine != v:foldend
 	let lineString = substitute(lineString, '/\*\|\*/\d\=', '', 'g')
 	let lineString = substitute(lineString, '^\s*\*\?\s*', '', 'g')
 	let lineString = substitute(lineString, '{$', '', 'g')
 	let lineString = substitute(lineString, '($', '(..);', 'g')
-	" endif
-
-	" Emulates printf("%3d", lines)..
-	if lines < 10
-		let lines = "  " . lines
-	elseif lines < 100
-		let lines = " " . lines
-	endif
 
 	" Append an (a) if there is PhpDoc in the fold (a for API)
 	if currentLine != v:foldstart
 		let lineString = lineString . " " . g:phpDocIncludedPostfix . " "
 	endif
 
+    let fs = v:foldstart
 	" Return the foldtext
-	return "+--".lines." lines: " . lineString
+	if fs > v:foldend
+		let line = lineString
+	else
+		let line = substitute(lineString, '\t', repeat(' ', &tabstop), 'g')
+	endif
+
+	let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
+	let foldSize = 1 + v:foldend - v:foldstart
+	let foldSizeStr = " " . foldSize . " lines "
+	let foldLevelStr = repeat("+--", v:foldlevel)
+	let lineCount = line("$")
+	let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+	let expansionString = repeat(".", w - strwidth(foldSizeStr.line.foldLevelStr.foldPercentage))
+	return line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 endfunction
 " }}}
 function! SkipMatch() " {{{
