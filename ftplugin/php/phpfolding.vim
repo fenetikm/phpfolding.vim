@@ -627,6 +627,10 @@ function! PHPFoldText() " {{{
         let g:PHPFoldingRepeatSymbol='.'
     endif
 
+    if !exists("g:PHPFoldingShowPercentage")
+        let g:PHPFoldingShowPercentage=1
+    endif
+
     let prefix = g:PHPFoldingCollapsedSymbol . ' '
 
 	let w = winwidth(0) - &foldcolumn - (&number ? 8 : 0)
@@ -635,6 +639,9 @@ function! PHPFoldText() " {{{
 	let foldLevelStr = repeat("+--", v:foldlevel)
 	let lineCount = line("$")
 	let foldPercentage = printf("[%.1f", (foldSize*1.0)/lineCount*100) . "%] "
+    if g:PHPFoldingShowPercentage != 1
+        let foldPercentage = ''
+    endif
 	let expansionString = repeat(g:PHPFoldingRepeatSymbol, w - strwidth(prefix.foldSizeStr.line.foldLevelStr.foldPercentage))
 	return prefix . line . expansionString . foldSizeStr . foldPercentage . foldLevelStr
 endfunction
